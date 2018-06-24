@@ -1,44 +1,59 @@
-// listen for submition 
-
+// Listen for submit
 document.getElementById('loan-form').addEventListener('submit', calculateResults);
 
-
+// Calculate Results
 function calculateResults(e){
-console.log('calculating');    
-    
-//creatinf variables based on the UI form 
-    
-var amount = document.getElementById('amount');    
-var interest = document.getElementById('interest');
-var years = document.getElementById('years');
-var monthlyPayments = document.getElementById('monthlyPayments');
-var totalPayment = document.getElementById('totalPayment');
-var totalInterest = document.getElementById('totalInterest');
+  console.log('Calculating...');
+  // UI Vars
+  const amount = document.getElementById('amount');
+  const interest = document.getElementById('interest');
+  const years = document.getElementById('years');
+  const monthlyPayment = document.getElementById('monthly-payment');
+  const totalPayment = document.getElementById('total-payment');
+  const totalInterest = document.getElementById('total-interest');
 
-//as a decimal   
-var principal = parseFloat(amount.value);
-var calculateInterrest = parseFloat(interest.value) / 100 /12;
-var calculatePayments = parseFloat(years.value) * 12;
+  const principal = parseFloat(amount.value);
+  const calculatedInterest = parseFloat(interest.value) / 100 / 12;
+  const calculatedPayments = parseFloat(years.value) * 12;
 
- //compute monthly payments
-var x = Math.pow(1 + calculateInterrest , calculatePayments);
-var monthly = (principal * x * calculateInterrest)/(x-1);
-    
- if(isFinite(monthly)){
-     
-monthlyPayments.value = monthly.toFixed(2);
-totalPayment.value = ((monthly * calculatePayments)- principal).toFixed(2);
-}else{
-    
-    
-}   
-    
+  // Compute monthly payment
+  const x = Math.pow(1 + calculatedInterest, calculatedPayments);
+  const monthly = (principal*x*calculatedInterest)/(x-1);
 
-    
-    e.preventDefault();
+  if(isFinite(monthly)) {
+    monthlyPayment.value = monthly.toFixed(2);
+    totalPayment.value = (monthly * calculatedPayments).toFixed(2);
+    totalInterest.value = ((monthly * calculatedPayments)-principal).toFixed(2);
+  } else {
+    showError('Please check your numbers');
+  }
 
+  e.preventDefault();
+}
 
-    
+// Show Error
+function showError(error){
+  // Create a div
+  const errorDiv = document.createElement('div');
 
+  // Get elements
+  const card = document.querySelector('.card');
+  const heading = document.querySelector('.heading');
 
-} 
+  // Add class
+  errorDiv.className = 'alert alert-danger';
+
+  // Create text node and append to div
+  errorDiv.appendChild(document.createTextNode(error));
+
+  // Insert error above heading
+  card.insertBefore(errorDiv, heading);
+
+  // Clear error after 3 seconds
+  setTimeout(clearError, 3000);
+}
+
+// Clear error
+function clearError(){
+  document.querySelector('.alert').remove();
+}
